@@ -7,7 +7,7 @@ So the idea is using scrapper to check if data changed or not, then notify it.
 
 ## Requirement
 - go
-- linux + dunstify (if running in loop and notify when data changed)
+- chrome or google-chrome
 
 # Stack
 - go
@@ -22,11 +22,10 @@ go build -o khs ./cmd/app
 # run in one mode
 ./khs
 # run in loop mode, it will notify you if the data changed
-# currently the notofication is send by dunstify
+# notofication is send by discord webhook
 ./khs -l
 ```
 
 ## Todo
-- [ ] email or sms notification
 - [ ] demo vidio
 

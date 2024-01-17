@@ -2,8 +2,6 @@ package main
 
 import (
 	"fmt"
-	"os"
-	"os/exec"
 	"reflect"
 	"time"
 
@@ -26,16 +24,10 @@ func loopRun(s *internal.Siakad) {
 		app.InfoLog.Println(newKHS)
 		if !reflect.DeepEqual(currentKHS, newKHS) {
 			currentKHS = newKHS
-			app.InfoLog.Println("--DATA CHANGED--")
-			cmd := exec.Command("dunstify", "-u", "normal", "-t", "0",
-				fmt.Sprintf("\"%s %s\"\n", "--Data Changed--", fmt.Sprint(currentKHS)))
-			cmd.Stdout = os.Stdout
-			cmd.Stderr = os.Stderr
-			err := cmd.Run()
+			body, err := w.SendMessage(fmt.Sprint(currentKHS))
 			if err != nil {
-				app.ErrorLog.Println(err)
+				app.ErrorLog.Printf("error send message: %s got return: %s", err, body)
 			}
-			w.SendMessage(fmt.Sprint(currentKHS))
 		}
 		time.Sleep(10 * time.Second)
 	}
