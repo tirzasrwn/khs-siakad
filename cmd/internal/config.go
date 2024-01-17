@@ -2,6 +2,8 @@ package internal
 
 import (
 	"log"
+
+	"github.com/tirzasrwn/khs-siakad/webhook"
 )
 
 type AppConfig struct {
@@ -9,4 +11,5 @@ type AppConfig struct {
 	ErrorLog       *log.Logger
 	SiakadUsername string
 	SiakadPassword string
+	Webhook        webhook.Webhook
 }

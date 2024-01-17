@@ -8,6 +8,7 @@ import (
 	"time"
 
 	"github.com/tirzasrwn/khs-siakad/cmd/internal"
+	"github.com/tirzasrwn/khs-siakad/webhook"
 )
 
 func oneRun(s *internal.Siakad) {
@@ -16,6 +17,7 @@ func oneRun(s *internal.Siakad) {
 
 func loopRun(s *internal.Siakad) {
 	var currentKHS []internal.KHS
+	w := webhook.New(app.Webhook.URL)
 	for {
 		newKHS, err := s.GetKHSData()
 		if err != nil {
@@ -33,6 +35,7 @@ func loopRun(s *internal.Siakad) {
 			if err != nil {
 				app.ErrorLog.Println(err)
 			}
+			w.SendMessage(fmt.Sprint(currentKHS))
 		}
 		time.Sleep(10 * time.Second)
 	}

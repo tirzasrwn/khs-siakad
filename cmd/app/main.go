@@ -47,6 +47,7 @@ func initializeAppConfig() {
 
 	app.SiakadPassword = viper.GetString("SIAKAD_PASSWORD")
 	app.SiakadUsername = viper.GetString("SIAKAD_USERNAME")
+	app.Webhook.URL = viper.GetString("WEBHOOK_URL")
 
 	app.InfoLog.Println("success load config ...")
 }
