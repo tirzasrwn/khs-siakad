@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"regexp"
 	"strings"
+	"time"
 
 	"github.com/chromedp/chromedp"
 )
@@ -22,6 +23,8 @@ func NewSiakad(username string, password string) *Siakad {
 func (s *Siakad) GetKHSData() ([]KHS, error) {
 	// Create a new context
 	ctx, cancel := chromedp.NewContext(context.Background())
+	defer cancel()
+	ctx, cancel = context.WithTimeout(ctx, 5*time.Second)
 	defer cancel()
 
 	// Navigate to the login page
