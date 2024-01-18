@@ -16,6 +16,12 @@ func NewSiakad(username string, password string) (*Siakad, error) {
 	// Create a new context
 	ctx, cancel := chromedp.NewContext(context.Background())
 
+	// Start the browser without timeout
+	err := chromedp.Run(ctx)
+	if err != nil {
+		return nil, err
+	}
+
 	s = &Siakad{
 		username:       username,
 		password:       password,
@@ -27,7 +33,12 @@ func NewSiakad(username string, password string) (*Siakad, error) {
 }
 
 func (s *Siakad) GetKHSData() ([]KHS, error) {
+	// Create timeout context
 	ctx, cancel := context.WithTimeout(s.chromedpCtx, 5*time.Second)
+	defer cancel()
+
+	// Open new tab because browser already started in NewSiakad
+	ctx, cancel = chromedp.NewContext(ctx)
 	defer cancel()
 
 	// Navigate to the login page
