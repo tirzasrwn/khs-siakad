@@ -26,7 +26,11 @@ func main() {
 	el = log.New(os.Stdout, "ERROR\t", log.Ldate|log.Ltime)
 	app.ErrorLog = el
 	initializeAppConfig()
-	s := internal.NewSiakad(app.SiakadUsername, app.SiakadPassword)
+	s, err := internal.NewSiakad(app.SiakadUsername, app.SiakadPassword)
+	if err != nil {
+		app.ErrorLog.Println(err)
+	}
+	defer s.ChromedpCancel()
 	if loop {
 		loopRun(s)
 	}

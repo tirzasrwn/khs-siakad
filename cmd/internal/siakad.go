@@ -12,19 +12,22 @@ import (
 
 var s *Siakad
 
-func NewSiakad(username string, password string) *Siakad {
+func NewSiakad(username string, password string) (*Siakad, error) {
+	// Create a new context
+	ctx, cancel := chromedp.NewContext(context.Background())
+
 	s = &Siakad{
-		username: username,
-		password: password,
+		username:       username,
+		password:       password,
+		chromedpCtx:    ctx,
+		ChromedpCancel: cancel,
 	}
-	return s
+
+	return s, nil
 }
 
 func (s *Siakad) GetKHSData() ([]KHS, error) {
-	// Create a new context
-	ctx, cancel := chromedp.NewContext(context.Background())
-	defer cancel()
-	ctx, cancel = context.WithTimeout(ctx, 5*time.Second)
+	ctx, cancel := context.WithTimeout(s.chromedpCtx, 5*time.Second)
 	defer cancel()
 
 	// Navigate to the login page
@@ -32,7 +35,6 @@ func (s *Siakad) GetKHSData() ([]KHS, error) {
 	if err != nil {
 		return nil, err
 	}
-
 	// Wait for the login page to load
 	err = chromedp.Run(ctx, chromedp.WaitVisible("#username"))
 	if err != nil {
