@@ -20,6 +20,8 @@ func loopRun(s *internal.Siakad) {
 		newKHS, err := s.GetKHSData()
 		if err != nil {
 			app.ErrorLog.Println(err)
+			time.Sleep(10 * time.Second)
+			continue
 		}
 		app.InfoLog.Println(newKHS)
 		if !reflect.DeepEqual(currentKHS, newKHS) {
@@ -27,6 +29,8 @@ func loopRun(s *internal.Siakad) {
 			body, err := w.SendMessage(fmt.Sprint(currentKHS))
 			if err != nil {
 				app.ErrorLog.Printf("error send message: %s got return: %s", err, body)
+				time.Sleep(10 * time.Second)
+				continue
 			}
 		}
 		time.Sleep(10 * time.Second)

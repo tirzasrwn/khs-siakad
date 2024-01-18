@@ -23,7 +23,7 @@ func main() {
 
 	il = log.New(os.Stdout, "INFO\t", log.Ldate|log.Ltime)
 	app.InfoLog = il
-	il = log.New(os.Stdout, "ERROR\t", log.Ldate|log.Ltime)
+	el = log.New(os.Stdout, "ERROR\t", log.Ldate|log.Ltime)
 	app.ErrorLog = el
 	initializeAppConfig()
 	s := internal.NewSiakad(app.SiakadUsername, app.SiakadPassword)
