@@ -26,7 +26,7 @@ func main() {
 	el = log.New(os.Stdout, "ERROR\t", log.Ldate|log.Ltime)
 	app.ErrorLog = el
 	initializeAppConfig()
-	s, err := internal.NewSiakad(app.SiakadUsername, app.SiakadPassword)
+	s, err := internal.NewSiakad(app.SiakadUsername, app.SiakadPassword, app.SiakadSemester)
 	if err != nil {
 		app.ErrorLog.Println(err)
 	}
@@ -51,6 +51,7 @@ func initializeAppConfig() {
 
 	app.SiakadPassword = viper.GetString("SIAKAD_PASSWORD")
 	app.SiakadUsername = viper.GetString("SIAKAD_USERNAME")
+	app.SiakadSemester = viper.GetString("SIAKAD_SEMESTER")
 	app.Webhook.URL = viper.GetString("WEBHOOK_URL")
 
 	app.InfoLog.Println("success load config ...")

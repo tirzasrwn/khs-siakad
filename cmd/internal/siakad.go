@@ -12,7 +12,7 @@ import (
 
 var s *Siakad
 
-func NewSiakad(username string, password string) (*Siakad, error) {
+func NewSiakad(username string, password string, semester string) (*Siakad, error) {
 	// Create a new context
 	ctx, cancel := chromedp.NewContext(context.Background())
 
@@ -25,6 +25,7 @@ func NewSiakad(username string, password string) (*Siakad, error) {
 	s = &Siakad{
 		username:       username,
 		password:       password,
+		semester:       semester,
 		chromedpCtx:    ctx,
 		ChromedpCancel: cancel,
 	}
@@ -34,7 +35,7 @@ func NewSiakad(username string, password string) (*Siakad, error) {
 
 func (s *Siakad) GetKHSData() ([]KHS, error) {
 	// Create timeout context
-	ctx, cancel := context.WithTimeout(s.chromedpCtx, 5*time.Second)
+	ctx, cancel := context.WithTimeout(s.chromedpCtx, 60*time.Second)
 	defer cancel()
 
 	// Open new tab because browser already started in NewSiakad
@@ -77,8 +78,25 @@ func (s *Siakad) GetKHSData() ([]KHS, error) {
 		return nil, err
 	}
 
+	// Wait for select semester
+	err = chromedp.Run(ctx, chromedp.WaitVisible(`select[name="lstSemester"]`))
+	if err != nil {
+		return nil, err
+	}
+
+	// Choose semester by select value
+	err = chromedp.Run(ctx,
+		chromedp.SetValue(`select[name="lstSemester"]`, s.semester),
+	)
+	if err != nil {
+		return nil, err
+	}
+
 	// Click lihat
-	err = chromedp.Run(ctx, chromedp.Click("/html/body/div/div[2]/div[1]/form[1]/table/tbody/tr/td[2]/input"))
+	err = chromedp.Run(ctx,
+		chromedp.Click("/html/body/div/div[2]/div[1]/form[1]/table/tbody/tr/td[2]/input"),
+		chromedp.WaitReady(".table-common"),
+	)
 	if err != nil {
 		return nil, err
 	}

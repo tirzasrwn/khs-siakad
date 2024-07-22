@@ -11,5 +11,6 @@ type AppConfig struct {
 	ErrorLog       *log.Logger
 	SiakadUsername string
 	SiakadPassword string
+	SiakadSemester string
 	Webhook        webhook.Webhook
 }
